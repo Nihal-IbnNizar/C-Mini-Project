@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+struct LaptopSpecs {
+    int ram;
+    int storage;
+    int cpu_cores;
+};
+
+struct LaptopPriceRange {
+    struct LaptopSpecs min_specs;
+    struct LaptopSpecs max_specs;
+    float min_price;
+    float max_price;
+};
+
+struct LaptopPriceRange laptopData[] = {
+    {{8, 256, 4}, {16, 512, 8}, 70000.0, 125000.0},
+    {{4, 128, 2}, {8, 256, 4}, 35000.0, 65000.0},
+    {{0, 0, 0}, {0, 0, 0}, 15000.0, 25000.0}  // Default case
+};
+
+void predictPriceRange(struct LaptopSpecs specs) {
+    for (int i = 0; i < sizeof(laptopData) / sizeof(laptopData[0]); i++) {
+        if (specs.ram >= laptopData[i].min_specs.ram &&
+            specs.storage >= laptopData[i].min_specs.storage &&
+            specs.cpu_cores >= laptopData[i].min_specs.cpu_cores &&
+            specs.ram <= laptopData[i].max_specs.ram &&
+            specs.storage <= laptopData[i].max_specs.storage &&
+            specs.cpu_cores <= laptopData[i].max_specs.cpu_cores) {
+            printf("Predicted Price Range: $%.2f - $%.2f\n", laptopData[i].min_price, laptopData[i].max_price);
+            return;
+        }
+    }
+    printf("Predicted Price Range: INR %.2f - INR %.2f\n", laptopData[sizeof(laptopData) / sizeof(laptopData[0]) - 1].min_price, laptopData[sizeof(laptopData) / sizeof(laptopData[0]) - 1].max_price);
+}
+
+int main() {
+    struct LaptopSpecs userSpecs;
+
+    printf("-----WELCOME TO LAPTOP PRICE RANGE PREDICTOR-----\n");
+    
+    printf("Enter laptop specifications:\n");
+    
+    printf("RAM (GB): ");
+    scanf("%d", &userSpecs.ram);
+    printf("Storage (GB): ");
+    scanf("%d", &userSpecs.storage);
+    printf("CPU Cores: ");
+    scanf("%d", &userSpecs.cpu_cores);
+
+    predictPriceRange(userSpecs);
+    
+    printf("\nThank you for using the Laptop Price Predictor!\n");
+
+    return 0;
+}
